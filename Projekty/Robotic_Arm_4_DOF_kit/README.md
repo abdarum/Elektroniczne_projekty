@@ -25,6 +25,9 @@ W kosoli wpisz komendę:
 
 Otwórz w Arduino IDE plik `Elektroniczne_projekty/Projekty/Robotic_Arm_4_DOF_kit/Robotic_Arm_4_DOF_kit.ino` oraz wgraj go na mikrokontroler upewniając się, że właściwa płytka została wybrana.
 
+### Przeanalizuj wgrany kod 
+Przeanalizuj zawartość pliku `Elektroniczne_projekty/Projekty/Robotic_Arm_4_DOF_kit/Robotic_Arm_4_DOF_kit.ino`, aby potrafić wytłumaczyć co się w którym momencie dzieje.
+
 ## Czynności dodatkowe
 ### Wygodniejsze edytowanie kodu
 Pobierz i zainstaluj edytor tekstowy [Notepad++](https://notepad-plus-plus.org/downloads/).
