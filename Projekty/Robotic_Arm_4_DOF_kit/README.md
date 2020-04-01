@@ -5,7 +5,7 @@
 Pobierz Arduino ze strony:
 ```https://www.arduino.cc/en/Main/Software```
 
-Krótki opis czym jest Arduino znajdziesz na YouTube - [Kurs Arduino #1: Wstęp - Jak zacząć przygodę z Arduino (od podstaw)](https://www.youtube.com/watch?v=TzTmWqoN9i8) lub na forum [Forbot](https://forbot.pl/blog/kurs-arduino-srodowisko-jak-zaczac-programowac-id936) w formie kursu.
+Krótki opis czym jest Arduino znajdziesz na YouTube - [Kurs Arduino #1: Wstęp - Jak zacząć przygodę z Arduino (od podstaw)](https://www.youtube.com/watch?v=TzTmWqoN9i8) lub na forum Forbot - [Kurs Arduino – #1 – podstawy Arduino oraz środowisko](https://forbot.pl/blog/kurs-arduino-srodowisko-jak-zaczac-programowac-id936) w formie kursu. Zachęcam do zapoznania się z obiema wersjami.
 
 Płytką z której będziesz korzystać będzie `Arduino Leonardo`.
 
