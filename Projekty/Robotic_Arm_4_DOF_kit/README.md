@@ -6,7 +6,7 @@
 Pobierz Arduino ze strony:
 ```https://www.arduino.cc/en/Main/Software```
 
-Krótki opis czym jest Arduino znajdziesz na [YouTube](https://www.youtube.com/watch?v=TzTmWqoN9i8) lub na forum [Forbot](https://forbot.pl/blog/kurs-arduino-srodowisko-jak-zaczac-programowac-id936) w formie kursu.
+Krótki opis czym jest Arduino znajdziesz na YouTube - [Kurs Arduino #1: Wstęp - Jak zacząć przygodę z Arduino (od podstaw)](https://www.youtube.com/watch?v=TzTmWqoN9i8) lub na forum Forbot - [Kurs Arduino – #1 – podstawy Arduino oraz środowisko](https://forbot.pl/blog/kurs-arduino-srodowisko-jak-zaczac-programowac-id936) w formie kursu. Zachęcam do zapoznania się z obiema wersjami.
 
 Płytką z której będziesz korzystać będzie `Arduino Leonardo`.
 
@@ -24,7 +24,10 @@ W kosoli wpisz komendę:
 
 ### Wgraj i uruchom dedykowany program
 
-Otwórz w Arduino IDE plik `Robotic_Arm_4_DOF_kit.ino` oraz wgraj go na mikrokontroler upewniając się, że właściwa płytka została wybrana.
+Otwórz w Arduino IDE plik `Elektroniczne_projekty/Projekty/Robotic_Arm_4_DOF_kit/Robotic_Arm_4_DOF_kit.ino` oraz wgraj go na mikrokontroler upewniając się, że właściwa płytka została wybrana.
+
+### Przeanalizuj wgrany kod 
+Przeanalizuj zawartość pliku `Elektroniczne_projekty/Projekty/Robotic_Arm_4_DOF_kit/Robotic_Arm_4_DOF_kit.ino`, aby potrafić wytłumaczyć co się w którym momencie dzieje.
 
 ## Czynności dodatkowe
 ### Wygodniejsze edytowanie kodu
