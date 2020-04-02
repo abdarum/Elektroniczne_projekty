@@ -1,5 +1,6 @@
 # Robotic Arm 4 DOF
 
+![alt text](robotic_arm_image.jpg "Final look")
 ## Czynności obowiązkowe
 ### Pobierz Arduino
 Pobierz Arduino ze strony:
