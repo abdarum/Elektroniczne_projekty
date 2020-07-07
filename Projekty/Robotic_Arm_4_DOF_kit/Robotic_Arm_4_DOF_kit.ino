@@ -38,6 +38,9 @@ void set_servos();
 
 /****************** MAIN FUNCTIONS ******************/
 void setup() {
+  // To avoid burn of pin 11
+  // Aby uniknąć spalenia pinu 
+  pinMode(11, INPUT);
   // Default function: setup all needed modules during start
   // Domyślna funkcja: która służy do ustawienia wszystkich modułów podczas startu
   setup_servos();
