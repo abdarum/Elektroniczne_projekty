@@ -2,6 +2,8 @@
   Script working as a Watchdog of the router device
 
   If google.com can not be reached a few attempts in a row, then router device will be rebooted
+
+  Code was prepared for ESP32 CAM
 */
 #include <WiFi.h>
 #include <HTTPClient.h>
@@ -9,21 +11,21 @@
 
 #include "secrets.h" // Copy secrets_example.h to secrets.h and fill up
 
-#define REBOOT_NOTIFICATION_LED 33 // Red led - reverse logic
-#define ROUTER_POWER_DIS_PIN 12    // P-chanel Mosfet - reverse logic, so HIGH - power for router is disabled ; LOW - Power for router is enabled -
+#define REBOOT_NOTIFICATION_LED 33 // Red led - reverse logic, so HIGH - LED is disabled ; LOW - LED is enabled
+#define ROUTER_POWER_DIS_PIN 2    // HIGH - power for router is enabled ; LOW - Power for router is disabled
 
 #define TEST_CONNECTION_LOOP_TIMEOUT 30   // seconds - check status every X seconds
 #define REBOOT_AFTER_X_CONNECTION_FAILS 4 // After X failed test loop connections the router will be rebooted
-#define REBOOT_POWER_DOWN_TIMEOUT 90      // seconds - how much time router will be turned while restarting
+#define REBOOT_POWER_DOWN_TIMEOUT 60      // seconds - how much time router will be turned while restarting
 
 #define SETUP_ROUTER_POWER_PINOUTS       \
   pinMode(ROUTER_POWER_DIS_PIN, OUTPUT); \
   pinMode(REBOOT_NOTIFICATION_LED, OUTPUT);
 #define ENABLE_ROUTER_POWER                \
-  digitalWrite(ROUTER_POWER_DIS_PIN, LOW); \
+  digitalWrite(ROUTER_POWER_DIS_PIN, HIGH); \
   digitalWrite(REBOOT_NOTIFICATION_LED, HIGH); // enable router and disable notification LED
 #define DISABLE_ROUTER_POWER                \
-  digitalWrite(ROUTER_POWER_DIS_PIN, HIGH); \
+  digitalWrite(ROUTER_POWER_DIS_PIN, LOW); \
   digitalWrite(REBOOT_NOTIFICATION_LED, LOW); // disable router and enable notification LED
 
 // Values 0 or above are allowed for counters, so when you would like to disable counter set it with this value
