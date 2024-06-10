@@ -12,7 +12,7 @@
 #include "secrets.h" // Copy secrets_example.h to secrets.h and fill up
 
 #define REBOOT_NOTIFICATION_LED 33 // Red led - reverse logic, so HIGH - LED is disabled ; LOW - LED is enabled
-#define ROUTER_POWER_DIS_PIN 2    // HIGH - power for router is enabled ; LOW - Power for router is disabled
+#define ROUTER_POWER_DIS_PIN 2     // HIGH - power for router is enabled ; LOW - Power for router is disabled
 
 #define TEST_CONNECTION_LOOP_TIMEOUT 30   // seconds - check status every X seconds
 #define REBOOT_AFTER_X_CONNECTION_FAILS 4 // After X failed test loop connections the router will be rebooted
@@ -21,10 +21,10 @@
 #define SETUP_ROUTER_POWER_PINOUTS       \
   pinMode(ROUTER_POWER_DIS_PIN, OUTPUT); \
   pinMode(REBOOT_NOTIFICATION_LED, OUTPUT);
-#define ENABLE_ROUTER_POWER                \
+#define ENABLE_ROUTER_POWER                 \
   digitalWrite(ROUTER_POWER_DIS_PIN, HIGH); \
   digitalWrite(REBOOT_NOTIFICATION_LED, HIGH); // enable router and disable notification LED
-#define DISABLE_ROUTER_POWER                \
+#define DISABLE_ROUTER_POWER               \
   digitalWrite(ROUTER_POWER_DIS_PIN, LOW); \
   digitalWrite(REBOOT_NOTIFICATION_LED, LOW); // disable router and enable notification LED
 
@@ -32,6 +32,7 @@
 // Supported only by some counters
 #define COUNTER_DISABLED -1
 #define WDT_TIMEOUT REBOOT_POWER_DOWN_TIMEOUT + 3 * TEST_CONNECTION_LOOP_TIMEOUT // Set the watchdog timeout to X seconds max possible is 2 loops and restart
+#define FIRST_WIFI_CONNECTION_TIMEOUT TEST_CONNECTION_LOOP_TIMEOUT               // Set how long in seconds it will try to connect to WiFi before standard operation
 
 const char *ssid = WIFI_SSID;
 const char *password = WIFI_PASSWORD;
@@ -52,12 +53,21 @@ void setup()
 
   // Połącz z siecią WiFi
   WiFi.begin(ssid, password);
-  while (WiFi.status() != WL_CONNECTED)
+  unsigned long first_wifi_connect_attempt_time = millis();
+  while (WiFi.status() != WL_CONNECTED && ((millis() - first_wifi_connect_attempt_time) < FIRST_WIFI_CONNECTION_TIMEOUT * 1000))
   {
     Serial.println("WiFi connecting ...");
     delay(2000); // Wait 2 seconds
   }
-  Serial.println("WiFi connected!");
+
+  if (WiFi.status() != WL_CONNECTED)
+  {
+    Serial.println("It wasn't possible to connect to WiFi. Main loop started so reboot could be done");
+  }
+  else
+  {
+    Serial.println("WiFi connected!");
+  }
 }
 
 void perform_router_reboot()
@@ -165,7 +175,7 @@ void loop()
     cycles_after_reboot_count++;
   }
 
-  if (ping_failed_count > REBOOT_AFTER_X_CONNECTION_FAILS)
+  if (ping_failed_count > REBOOT_AFTER_X_CONNECTION_FAILS || wifi_failed_count > REBOOT_AFTER_X_CONNECTION_FAILS)
   {
     perform_router_reboot();
   }
