@@ -26,33 +26,26 @@ const uint16_t rawThomsonVolumeDown[103] = { 4130, 3970, 580, 1920, 580, 1970, 5
 #define decodedRawDataSamsungAudioVolumeDown 0x7300401
 
 
-void sendRawIrCode(const uint16_t array[]) {
-  // IrSender.sendRaw(rawThomsonMute, sizeof(rawThomsonMute) / sizeof(rawThomsonMute[0]), NEC_KHZ); // Note the approach used to automatically calculate the size of the array.
-  IrSender.sendRaw(array, sizeof(array) / sizeof(array[0]), MODULATION_KHZ);  // Note the approach used to automatically calculate the size of the array.
-}
 
 bool handleReceivedIrCode() {
   bool command_sent = false;
   for (int i = 0; i < REPEAT_COUNT; i++) {
     if (IrReceiver.decodedIRData.decodedRawData == decodedRawDataChiqMute || IrReceiver.decodedIRData.decodedRawData == decodedRawDataSamsungAudioMute) {
       IrSender.sendRaw(rawThomsonMute, sizeof(rawThomsonMute) / sizeof(rawThomsonMute[0]), MODULATION_KHZ);  // Note the approach used to automatically calculate the size of the array.
-      // sendRawIrCode(rawThomsonMute);
       Serial.println("Mute sent to Sub-woofer Thompson DPL80HT");
       command_sent = true;
     }
     if (IrReceiver.decodedIRData.decodedRawData == decodedRawDataChiqVolumeUp || IrReceiver.decodedIRData.decodedRawData == decodedRawDataSamsungAudioVolumeUp) {
       IrSender.sendRaw(rawThomsonVolumeUp, sizeof(rawThomsonVolumeUp) / sizeof(rawThomsonVolumeUp[0]), MODULATION_KHZ);  // Note the approach used to automatically calculate the size of the array.
-      // sendRawIrCode(rawThomsonVolumeUp);
       Serial.println("Volume Up sent to Sub-woofer Thompson DPL80HT");
       command_sent = true;
     }
     if (IrReceiver.decodedIRData.decodedRawData == decodedRawDataChiqVolumeDown || IrReceiver.decodedIRData.decodedRawData == decodedRawDataSamsungAudioVolumeDown) {
       IrSender.sendRaw(rawThomsonVolumeDown, sizeof(rawThomsonVolumeDown) / sizeof(rawThomsonVolumeDown[0]), MODULATION_KHZ);  // Note the approach used to automatically calculate the size of the array.
-      // sendRawIrCode(rawThomsonVolumeDown);
       Serial.println("Volume Down sent to Sub-woofer Thompson DPL80HT");
       command_sent = true;
     }
-      if (IrReceiver.decodedIRData.decodedRawData == decodedRawDataSamsungAudioTurnOnOff) {
+    if (IrReceiver.decodedIRData.decodedRawData == decodedRawDataSamsungAudioTurnOnOff) {
       IrSender.sendRaw(rawThomsonTurnOnOff, sizeof(rawThomsonTurnOnOff) / sizeof(rawThomsonTurnOnOff[0]), MODULATION_KHZ);  // Note the approach used to automatically calculate the size of the array.
       Serial.println("Power On/Off sent to Sub-woofer Thompson DPL80HT");
       command_sent = true;
@@ -121,7 +114,7 @@ void setup() {
   Serial.println("IR reader startup");
 
   // IR send
-  IrSender.begin(IR_SEND_PIN);                                                                           // Start with IR_SEND_PIN -which is defined in PinDefinitionsAndMore.h- as send pin and enable feedback LED at default feedback LED pin
+  IrSender.begin(IR_SEND_PIN);  // Start with IR_SEND_PIN -which is defined in PinDefinitionsAndMore.h- as send pin and enable feedback LED at default feedback LED pin
 }
 
 void loop() {
