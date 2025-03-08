@@ -32,6 +32,10 @@ Wyjście napięcia dzielnika dla poziomów oświetlenia (dla 5V):
 * V(dzielnika): 0.1V Fotorezystor: 5M(do 50M) Ohm - ciemność
 
 
+W przypadku obsługi sterowania pilotem IR, użyj poniższego kodu:
+https://github.com/wagiminator/ATtiny13-TinyDecoder
+
+
 */
 
 #include "global.h"
