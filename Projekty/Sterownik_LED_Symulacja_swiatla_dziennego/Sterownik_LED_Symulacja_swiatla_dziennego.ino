@@ -1,40 +1,51 @@
 
 /*
 
-Prompt:
-Mam fotorezystor Spectral peak (nm): 540 Light Resistance (10Lux) (KΩ) :10-20 Dark Resistance (MΩ): 1
+This Arduino device controls the brightness of a 12V LED strip based on the light level detected by a photoresistor. The brightness of the LED strip will correspond to the light intensity received by the photoresistor. The Arduino reads the voltage level from a voltage divider that includes the photoresistor and adjusts the PWM signal accordingly.
 
-Potrzebuję zrobić urządzenie na arduino, które na podstawie poziomu naświetlenia(fotorezystor) będzie sterowało sygnałem PWM, który zasili pasek diod LED 12V, tak aby jasność paska led odpowiadała jasności naświetlenia odbieranego przez fotorezystor.
+The device operates on three important variables:
+- Maximum PWM value (e.g., 50% to avoid too bright light) - set using a potentiometer after entering the maximum LED brightness setting mode.
+- Minimum brightness value for the photoresistor (corresponding to darkness - PWM 0%) - set based on the current value of the photoresistor after entering the minimum LED brightness setting mode (the value for which the LEDs will not light).
+- Maximum brightness value for the photoresistor - full daylight - corresponds to full brightness - max PWM. The maximum value will be tracked continuously and will be taken as the maximum brightness value from the last 7 days.
 
-Arduino będzie odczytywało poziom napięcia z dzielnika napięcia, który będzie oparty na fotorezystorze i na podstawie tego napięcia będzie ustawiało sygnał PWM. Będą ustawione 3 granice(przy pomocy potencjometrów) - minimalna wartość napięcia dla fotodiody(odpowiadająca ciemności na fotodiodzie - PWM 0%), maksymalna wartość jaką może przyjąć PWM (np 50%, żeby nie razić zbyt mocnym światłem) i maksymalna wartość jasności na fotodiodzie - pełen dzień w pełnym słońcu - będzie odpowiadała pełnej jasności - max PWM
+There will be one button used to set two parameters. Two types of presses will be possible: SP (Shortpress) - 1 sec and LP (Longpress) - 3 sec.
 
-Wygeneruj kod źródłowy dla arduino, który na to pozwoli
+Modes activated by pressing:
+- Shortpress: Activates the mode for setting the maximum LED brightness. The LED will light up to the maximum available brightness, and the potentiometer can be used to set the max brightness (PWM). The LED brightness will be updated in real-time during adjustment. After entering the max brightness setting mode, there will be 3 minutes to confirm the new brightness by pressing shortpress. If shortpress is not pressed, the device will return to the standard mode without setting the current value.
 
+- Longpress: Activates the mode for setting the minimum value. After entering this mode, the user will have 3 minutes to confirm the current value read from the photoresistor as the minimum value. Confirmation is done by shortpress, and if there is no response, the device will return to standard mode. This mode will be signaled by displaying three LED brightness values sequentially, each for 0.5 seconds:
+  - 0% PWM
+  - LED brightness corresponding to the current light level on the photoresistor, and the current minimum threshold
+  - max LED brightness (max PWM)
 
+Below the minimum brightness value for the photoresistor, the PWM will be at 0%. The values between the minimum and maximum brightness values for the photoresistor will be mapped from 0% to max PWM to reflect the brightness detected by the photoresistor.
 
-Układ dzielnika napięcia:
+------------------------------------------------------------------------
+
+Voltage Divider Layout:
 
 5V
   |
-Fotorezystor
+Photoresistor (Spectral peak (nm): 540 Light Resistance (10Lux) (KΩ): 10-20 Dark Resistance (MΩ): 1)
   |
-  |---- Wyjście dzielnika
+  |---- Divider Output
   |
 R1 - 10k Ohm
   |
 GND
 
-Wyjście napięcia dzielnika dla poziomów oświetlenia (dla 5V):
+Voltage divider output for light levels (for 5V):
 
-* V(dzielnika): 4.9V Fotorezystor: 180 Ohm - Pełna jasność - przyłożone do żarówki
-* V(dzielnika): 3.7V Fotorezystor: 3.5k Ohm - leżące w pokoju na łóżku(światło z górnej żarówki)
-* V(dzielnika): 1.7V Fotorezystor: 20k Ohm - Słabe światło
-* V(dzielnika): 0.1V Fotorezystor: 5M(do 50M) Ohm - ciemność
+* V(divider): 4.9V Photoresistor: 180 Ohm - Full brightness - placed near a bulb
+* V(divider): 3.7V Photoresistor: 3.5k Ohm - lying in the room on the bed (light from the ceiling bulb)
+* V(divider): 1.7V Photoresistor: 20k Ohm - Low light
+* V(divider): 0.1V Photoresistor: 5M (up to 50M) Ohm - darkness
 
+Note:
+- Max daylight value for photoresistor under balcony was: 1.3-1.8 k Ohm, to that was ~85% of Vcc voltage
 
-W przypadku obsługi sterowania pilotem IR, użyj poniższego kodu:
+For IR remote control handling, use the following code:
 https://github.com/wagiminator/ATtiny13-TinyDecoder
-
 
 */
 
