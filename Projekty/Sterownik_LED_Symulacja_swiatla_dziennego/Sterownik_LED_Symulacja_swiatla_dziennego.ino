@@ -81,7 +81,7 @@ enum ButtonPress
 Mode currentMode = STANDARD;
 ButtonPress buttonPress = NO_PRESS;
 
-INT maxPwm = 0;
+UCHAR maxPwm = 0;
 INT photoresistorAdcValueMin = MIN_VOLTAGE_DEFAULT_THRESHOLD * MAX_ADC_VALUE;
 INT photoresistorAdcValueMax = MAX_VOLTAGE_DEFAULT_THRESHOLD * MAX_ADC_VALUE;
 ULONG lastPressTime = 0;
@@ -92,20 +92,13 @@ ULONG lastModeChangeTime = 0;
 ULONG lastSerialSendTime = 0;
 #endif
 
-UINT map_uint(UINT x, UINT in_min, UINT in_max, UINT out_min, UINT out_max)
+UCHAR map_uint_to_uchar(UINT x, UINT in_min, UINT in_max, UCHAR out_min, UCHAR out_max)
 {
   return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }
 
-UINT getAdjustmentValuePwmMapped()
-{
-  return analogRead(MAX_PWM_POT_PIN) * MAX_PWM_VALUE / MAX_ADC_VALUE;
-}
-
-UINT getSensorValue()
-{
-  return analogRead(PHOTORESISTOR_PIN);
-}
+#define getAdjustmentValuePwmMapped() (analogRead(MAX_PWM_POT_PIN) * MAX_PWM_VALUE / MAX_ADC_VALUE)
+#define getSensorValue() analogRead(PHOTORESISTOR_PIN)
 
 ButtonPress checkButtonPress()
 {
@@ -142,7 +135,7 @@ void updateLedBrightness()
   INT sensorValue = getSensorValue();
   if (sensorValue > photoresistorAdcValueMin)
   {
-    pwmValue = map_uint(sensorValue, photoresistorAdcValueMin, photoresistorAdcValueMax, 0, maxPwm);
+    pwmValue = map_uint_to_uchar(sensorValue, photoresistorAdcValueMin, photoresistorAdcValueMax, 0, maxPwm);
     pwmValue = constrain(pwmValue, 0, maxPwm);
   }
 
@@ -195,59 +188,59 @@ void updateLedBrightness()
 #endif
 }
 
-void setup()
+int main()
 {
   pinMode(LED_PWM_OUT_PIN, OUTPUT);
   pinMode(BUTTON_PIN, INPUT);
 #if SERIAL_ENA
   Serial.begin(9600);
 #endif
-}
 
-void loop()
-{
-  ULONG currentTime = millis();
-  buttonPress = checkButtonPress();
-
-  switch (currentMode)
+  while (1)
   {
-  case STANDARD:
-    if (buttonPress == SHORT_PRESS)
-    {
-      currentMode = SETTING_MAX_PWM;
-      lastModeChangeTime = currentTime;
-    }
-    else if (buttonPress == LONG_PRESS)
-    {
-      currentMode = SETTING_MIN_BRIGHTNESS;
-      lastModeChangeTime = currentTime;
-    }
-    break;
+    ULONG currentTime = millis();
+    buttonPress = checkButtonPress();
 
-  case SETTING_MAX_PWM:
-    if (currentTime - lastModeChangeTime > 180000)
-    { // 3 minutes timeout
-      currentMode = STANDARD;
-    }
-    else if (buttonPress == SHORT_PRESS)
+    switch (currentMode)
     {
-      maxPwm = getAdjustmentValuePwmMapped();
-      currentMode = STANDARD;
-    }
-    break;
+    case STANDARD:
+      if (buttonPress == SHORT_PRESS)
+      {
+        currentMode = SETTING_MAX_PWM;
+        lastModeChangeTime = currentTime;
+      }
+      else if (buttonPress == LONG_PRESS)
+      {
+        currentMode = SETTING_MIN_BRIGHTNESS;
+        lastModeChangeTime = currentTime;
+      }
+      break;
 
-  case SETTING_MIN_BRIGHTNESS:
-    if (currentTime - lastModeChangeTime > 180000)
-    { // 3 minutes timeout
-      currentMode = STANDARD;
+    case SETTING_MAX_PWM:
+      if (currentTime - lastModeChangeTime > 180000)
+      { // 3 minutes timeout
+        currentMode = STANDARD;
+      }
+      else if (buttonPress == SHORT_PRESS)
+      {
+        maxPwm = getAdjustmentValuePwmMapped();
+        currentMode = STANDARD;
+      }
+      break;
+
+    case SETTING_MIN_BRIGHTNESS:
+      if (currentTime - lastModeChangeTime > 180000)
+      { // 3 minutes timeout
+        currentMode = STANDARD;
+      }
+      else if (buttonPress == SHORT_PRESS)
+      {
+        photoresistorAdcValueMin = getSensorValue();
+        currentMode = STANDARD;
+      }
+      break;
     }
-    else if (buttonPress == SHORT_PRESS)
-    {
-      photoresistorAdcValueMin = getSensorValue();
-      currentMode = STANDARD;
-    }
-    break;
+
+    updateLedBrightness();
   }
-
-  updateLedBrightness();
 }
